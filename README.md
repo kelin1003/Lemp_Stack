@@ -1,16 +1,19 @@
 **Assumptions**
+
 This script will help create a Test Enviornment for the Wordpress developers.
 All the needed packages will be installed and will be running with the necessary configurations for Webserver (Nginx).
 Developers would just have to put their .php files under the /site/wordpress directory.
 This script will also ask you to enter a valid domain name, that you want to give to your website, And when you hit your entered domain name in the address bar of the browser it will point to the localhost where changes made to site will reflect.
 
 **Libraries Used**
+
 libpcre3 libpcre3-dev (Perl Compatible Regular Expressions) in Nginx to include regular expressions.
 zlib1g zlib1g-dev - zlib is a library implementing the deflate compression method found in gzip.
 libssl-dev - libssl is the portion of OpenSSL which supports TLS ( SSL and TLS Protocols ), and depends on libcrypto.
 libgd-dev - GD is a graphics library. It allows your code to quickly draw images complete with lines, arcs, text, multiple colours, cut and paste from other images, flood fills, and write out the result as a PNG file.
 
 **Script Manual**
+
 The script should be executed under **root** user priveleges only.
 
 The script will check if **Nginx, PHP, Mysql** are installed or not, and if not, it will install all the required packages for the same.
