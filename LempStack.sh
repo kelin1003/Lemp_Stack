@@ -1,15 +1,20 @@
-############################ Checking the user is root or not ###########################################
-	echo "Checking the user is root or not"
+#Checking the user is root or not
+#!/bin/bash
+	echo "Checking if the user is root or not"
 		if [[ $EUID -ne 0 ]]; then
 			echo "Please run this script as a root"
     			exit 1
     		else
        			echo "User is root"
 			echo "Updating and Upgrading the packages, Hence might take some time. Please do not terminate the script!!"
-        		apt-get update && apt-get upgrade -y
+        		apt-get update
         		sleep 1
    		fi
-############################ Checking Nginx And Installing if not present ##########################
+		
+#Checking Nginx And Installing if not present 
+
+#Installing Nginx from Source Code
+
         echo "Checking Nginx"
 		if [[ -e /var/run/nginx.pid && -e /etc/nginx/nginx.conf ]]; then
                     	echo "nginx is running and configured according to scripts requirement"
@@ -43,7 +48,9 @@
 			ps -ef|grep nginx
 			sleep 1				
             	fi
-# ########################## Checking PHP And Installing if not present ##########################	
+		
+#Checking PHP And Installing if not present 
+
 		  	echo "Checking PHP is present or not"
 			php_check=$(php -v|wc -l)
 		if [[ $php_check -gt 1 && -e /var/run/php ]]; then
@@ -57,8 +64,10 @@
 			chmod 777 /var/run/php/*
 		fi
 			php_sock=$(ls -ltr /var/run/php|grep www|cut -d" " -f10)
-# ########################## Checking MySql And Installing if not present ###########################
-			echo "Checking if MySql Exists or not "
+			
+#Checking MySql And Installing if not present 
+
+			echo "Checking if MySql exists or not "
 			service mysql start
 			mysql_check=$(ps -ef|grep mysql|wc -l)
 		if [[ $mysql_check -gt 1 && -e /etc/mysql/mysql.cnf ]]; then
@@ -74,7 +83,9 @@
 			phpenmod mysqli
 				
 		fi
-########################## Prompting user to input a valid domain name and creating an entry on /etc/hosts once domain name is validated ############################
+		
+#Prompting user to input a valid domain name and creating an entry on /etc/hosts once domain name is validated 
+
 			echo "Enter Domain name"
 			read dom_name
 			regx='^[a-zA-Z0-9][a-zA-Z0-9-][a-zA-Z0-9.]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,6}$'
@@ -82,13 +93,15 @@
 		do
 			echo "Enter a Proper Domain name"
 			read dom_name
-			done
+		done
 			echo "Now the enetered Domain name -> $dom_name looks good"
 			echo "Creating an Entry in /etc/hosts"
 			sleep 1
 			echo "127.0.0.1  $dom_name" >> /etc/hosts
-########################## Creating Nginx.conf file ############################################
-			echo "Now Creating a Wordpress Setup...Please do not interrupt"
+			
+#Creating Nginx.conf file 
+
+			echo "Now Creating a WordPress Setup...Please do not interrupt"
 			sleep 1
 			wget -P /site/ -q http://wordpress.org/latest.zip
 			unzip /site/latest.zip -d /site/
@@ -123,7 +136,9 @@
 			echo "Rebouncing Nginx"
 			sleep 1
 			systemctl reload nginx
-########################### Extracting name for the Database ################################
+			
+#Extracting name for the Database 
+
 			db_name=${dom_name%%.*}_db
 			user_name=user1
 			password=someday123
@@ -133,7 +148,9 @@
 			mysql -e "create user $user_name@localhost IDENTIFIED BY '$password';"
 			mysql -e "grant all privileges on $db_name to '$user_name'@'localhost';"
 			mysql -e "flush privileges;"
-######################## Creating wp-config.php file for Database connectivity ##################
+			
+#Creating wp-config.php file for Database connectivity 
+
 			touch /site/wordpress/wp-config.php
 			echo "
 				define( 'DB_NAME', '$db_name' );
@@ -161,7 +178,9 @@
 			sleep 1
 			echo "Your Website is believed to be ready now!!"
 			systemctl reload nginx
-######################### Finally the Big Bad script Ends!! ############################
+			
+#Finally the Big Bad script Ends!!
+
 			echo "Everything is Hopefully fine...Fingers Crossed"
 			echo "Please type your Domain name on the Browsers Address Bar correctly"
 
